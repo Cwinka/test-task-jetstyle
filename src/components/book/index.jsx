@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import BooksStore from "../../store/books"
 import style from "./book.style.css"
 
@@ -9,6 +9,10 @@ export const Book = React.memo( ({book}) => {
     }
 
     return <div className={style.book}>
+        <div>
+            <img src={book.image} height="205" width="145" alt="" />
+        </div>
+
         <div className={style.info}>
             <div className={style.title}>{book.title}</div>
             <div className={style.author}>{book.author}</div>
@@ -23,12 +27,19 @@ export const Book = React.memo( ({book}) => {
 function RedactBook({book, closeRedact}) {
     const [author, setNewAuthor] = useState(book.author)
     const [title, setNewTitle] = useState(book.title)
+    const imgRef = useRef()
 
     function update() {
-        BooksStore.updateBook({id: book.id, author, title})
+        const raw = imgRef.current.files?.length && imgRef.current.files[0]
+        BooksStore.updateBook(book.id, author, title, raw)
         closeRedact();
     }
     return <div className={style.book}>
+        <div>
+            <label htmlFor="image-update">Change image</label>
+            <input type="file" name="image-update" style={{width: "145px"}} ref={imgRef} />
+            <img src={book.image} height="205" width="145" alt="" />
+        </div>
         <div className={style.info}>
             <div>
                 <input className={style.title} name="title" value={title} onChange={(e) => setNewTitle(e.target.value)}/>

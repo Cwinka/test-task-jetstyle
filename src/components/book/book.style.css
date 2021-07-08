@@ -1,19 +1,14 @@
 .book {
-    display: flex;
-    padding: 10px 15px;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+.book + .book {
+    margin-top: 10px;
 }
 .info {
-    margin-right: 20px;
+    margin: 0 20px;
 }
 .title {
     font-size: 19px;
     font-weight: bold;
-}
-.author {
-
-}
-.btn {
-    height: 30px;
-    width: 75px;
 }
