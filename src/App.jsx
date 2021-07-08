@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from "react"
-import BookList from "./components/book_list"
-import {BooksContext} from './context'
+import React, {useEffect} from "react"
+import {BookList} from "./components/book_list"
+import {CreateBook} from "./components/create_book"
+import BooksStore from "./store/books"
 import "./styles.css"
+
 
 function fakeBooks() {
     return [
@@ -15,55 +17,16 @@ function fakeBooks() {
 }
 
 export default function App() {
-    const [books, setBooks] = useState([]);
     // setup
     useEffect(() => {
-        const fakebooks = fakeBooks()
-        updateBooks(fakebooks)
+        BooksStore.setBooks(fakeBooks())
     }, [])
-
-    function updateBooks(books){
-        setBooks(books)
-        localStorage.setItem('books', JSON.stringify(books))
-    }
-
-    function findBookById(id){
-        for (const idx in books){
-            if (books[idx].id == id) {
-                return idx
-            }
-        }
-    }
-    function addBook(book){
-        let lastId = 0
-        if (books.length) {
-            lastId = books[books.length -1].id
-        }
-        console.log(lastId);
-        book.id = lastId + 1
-        const newBooks = [...books, book]
-        updateBooks(newBooks)
-        
-    }
-    function deleteBookById(id){
-        const newBooks = books.filter(book => book.id !== id)
-        updateBooks(newBooks)
-    }
-    function updateBook(updatedBook){
-        const pos = findBookById(updatedBook.id)
-        const newBooks = [...books]
-        newBooks[pos] = updatedBook
-        updateBooks(newBooks)
-    }
 
     return <>
         <div className="task">
             <h1>Book list</h1>
-            <BooksContext.Provider value={{
-                addBook, deleteBookById, updateBook
-            }}>
-                <BookList books_list={books}/>
-            </BooksContext.Provider>
+            <CreateBook />
+            <BookList />
         </div>
     </>
 }

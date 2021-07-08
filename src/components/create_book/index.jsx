@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
-import { BooksContext } from "../../context";
+import React, { useState } from "react";
 import style from './create.style.css'
+import BooksStore from "../../store/books"
 
-
-export default function CreateBook() {
-    const {addBook} = useContext(BooksContext)
+export const CreateBook = () => {
     const [author, setAuthor] = useState('')
     const [title, setTitle] = useState('')
 
     function create() {
         if (author && title) {
-            addBook({author, title})
+            BooksStore.addBook(author, title)
+            setAuthor('')
+            setTitle('')
         }
     }
 

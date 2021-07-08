@@ -1,16 +1,17 @@
 import React from 'react'
-import Book from "../book"
-import CreateBook from "../create_book"
+import {Book} from "../book"
+import BooksStore from "../../store/books"
+import { observer } from "mobx-react-lite";
 
 import style from './book_list.style.css'
 
-export default function BookList({books_list}) {
+export const BookList = observer( () => {
+
     return <div className={style.books}>
-        <CreateBook />
         <div className={style.list}>
-            {books_list.map(book => 
+            {BooksStore.books.map(book => 
                 <Book book={book} />
             )}
         </div>
     </div>
-}
+})
