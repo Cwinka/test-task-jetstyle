@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+.btn {
+    width: 75px;
+    height: 30px;
+}

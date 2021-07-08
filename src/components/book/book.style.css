@@ -1,0 +1,18 @@
+.book {
+    display: flex;
+    padding: 10px 15px;
+}
+.info {
+    margin-right: 20px;
+}
+.title {
+    font-size: 19px;
+    font-weight: bold;
+}
+.author {
+
+}
+.btn {
+    height: 30px;
+    width: 75px;
+}
