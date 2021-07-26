@@ -1,48 +1,57 @@
-import React, { useContext, useState } from "react"
-import { BooksContext } from '../../context'
+import React, { useRef, useState } from "react"
+import BooksStore from "../../store/books"
 import style from "./book.style.css"
 
-export default function Book({book}) {
-    const {deleteBookById} = useContext(BooksContext);
+export const Book = React.memo( ({book}) => {
     const [toggled, setToggled] = useState(false);
-
     if (toggled){
         return <RedactBook book={book} closeRedact={() =>setToggled(false)}/>
     }
 
     return <div className={style.book}>
+        <div>
+            <img src={book.image} height="205" width="145" alt="" />
+        </div>
+
         <div className={style.info}>
             <div className={style.title}>{book.title}</div>
             <div className={style.author}>{book.author}</div>
         </div>
-        <button className="btn" onClick={() => deleteBookById(book.id)}>Delete</button>
-        <button className="btn" onClick={() => setToggled(!toggled)}>Redact</button>
+        <div>
+            <button className="btn" onClick={() => BooksStore.deleteBookById(book.id)}>Delete</button>
+            <button className="btn" onClick={() => setToggled(!toggled)}>Redact</button>
+        </div>
     </div>
-}
+})
 
 function RedactBook({book, closeRedact}) {
-    const {updateBook} = useContext(BooksContext);
     const [author, setNewAuthor] = useState(book.author)
     const [title, setNewTitle] = useState(book.title)
+    const imgRef = useRef()
 
     function update() {
-        updateBook({
-            id: book.id, author, title})
-            closeRedact();
+        const raw = imgRef.current.files?.length && imgRef.current.files[0]
+        BooksStore.updateBook(book.id, author, title, raw)
+        closeRedact();
     }
-    return <div className={style.redact}>
-        <div className={style.info}>
-            <label htmlFor="author">Author</label>
-            <input className={style.input} name="author" value={author} onChange={(e) => setNewAuthor(e.target.value)}/>
-
-            <label htmlFor="title">Title</label>
-            <input className={style.input} name="title" value={title} onChange={(e) => setNewTitle(e.target.value)}/>
+    return <div className={style.book}>
+        <div>
+            <label htmlFor="image-update">Change image</label>
+            <input type="file" name="image-update" style={{width: "145px"}} ref={imgRef} />
+            <img src={book.image} height="205" width="145" alt="" />
         </div>
-        <button className="btn" onClick={update}>
-            Save
-        </button>
-        <button className="btn" onClick={closeRedact}>
-            Cancel
-        </button>
+        <div className={style.info}>
+            <div>
+                <input className={style.title} name="title" value={title} onChange={(e) => setNewTitle(e.target.value)}/>
+            </div>
+            <div>
+                <input className={style.author} name="author" value={author} onChange={(e) => setNewAuthor(e.target.value)}/>
+            </div>
+
+        </div>
+        <div>
+            <button className="btn" onClick={update}>Save</button>
+            <button className="btn" onClick={closeRedact}>Cancel</button>
+        </div>
     </div>
 }
